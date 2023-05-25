@@ -4,7 +4,7 @@ import { Configuration, OpenAIApi } from 'openai';
 @Injectable()
 export class AppService {
   private CONTEXT_INSTRUCTION = 'Based on this context:';
-  private INSTRUCTION = `Answer the question below as truthfully as you can, if you don't know the answer, say you don't know in a sarcastic way otherwise, just answer.`;
+  private INSTRUCTION = ``;
   private openai: OpenAIApi;
   constructor() {
     const configuration = new Configuration({
@@ -12,7 +12,31 @@ export class AppService {
     });
     this.openai = new OpenAIApi(configuration);
   }
-  getHello(): string {
-    return 'Hello World!';
+  async createMenuList(prompt: string, context: string) {
+    const completion = await this.openai.createCompletion({
+      model: 'gpt-3.5-turbo',
+      prompt: `${this.CONTEXT_INSTRUCTION}\n\n\nContext: "${context}" \n\n\n${this.INSTRUCTION} \n\n\n ${prompt}`,
+      max_tokens: 300,
+      temperature: 1,
+    });
+
+    return completion?.data.choices?.[0]?.text;
+  }
+  async createCompletion(animal: string) {
+    const completion = await this.openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Suggest three names for an animal that is a superhero.
+
+Animal:고양이
+Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
+Animal: 개
+Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
+Animal: ${animal}
+Names:`,
+      max_tokens: 300,
+      temperature: 1,
+    });
+
+    return completion?.data.choices?.[0]?.text;
   }
 }
