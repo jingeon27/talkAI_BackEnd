@@ -5,10 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
+import { OpenAiModule } from './apis/openai/openai.module';
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    OpenAiModule,
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -26,6 +28,17 @@ import { AuthModule } from './apis/auth/auth.module';
       synchronize: true,
       logging: true,
     }),
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root@localhost',
+    //   password: '707760',
+    //   database: 'myproject',
+    //   entities: [`${__dirname}/apis/**/*.entity.*`],
+    //   synchronize: true,
+    //   logging: true,
+    // }),
   ],
 })
 export class AppModule {}

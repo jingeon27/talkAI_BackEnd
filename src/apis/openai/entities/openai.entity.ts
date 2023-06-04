@@ -3,20 +3,20 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class User {
+export class OpenAi {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;
 
-  @Column()
-  @Field(() => String)
-  email: string;
+  @Column('simple-array')
+  @Field(() => [String])
+  answer: string[];
+
+  @Column('simple-array')
+  @Field(() => [String])
+  question: string[];
 
   @Column()
-  // @Field(() => String)
-  password: string;
-
-  @Column()
   @Field(() => String)
-  name: string;
+  title: string;
 }

@@ -16,16 +16,12 @@ export class UsersService {
   findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {
     return this.userRepository.findOne({ where: { email } });
   }
-  async create({
-    email,
-    password,
-    ...props
-  }: IUsersServiceCreate): Promise<User> {
+  async create({ email, password, name }: IUsersServiceCreate): Promise<User> {
     const user = await this.findOneByEmail({ email });
     if (user) throw new ConflictException('이미 등록된 이메일 입니다.');
     const hashedPassward = await bcrypt.hash(password, 10);
     return this.userRepository.save({
-      ...props,
+      name,
       email,
       password: hashedPassward,
     });

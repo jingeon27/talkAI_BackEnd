@@ -6,9 +6,11 @@ export interface IAuthServiceLogin {
   password: string;
   context: IContext;
 }
+
 export interface IAuthServiceGetAccessToken {
   user: User | IAuthUser['user'];
 }
+
 export interface IAuthServiceSetRefreshToken
   extends IAuthServiceGetAccessToken {
   context: IContext;

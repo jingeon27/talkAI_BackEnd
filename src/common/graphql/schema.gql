@@ -1,0 +1,26 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+}
+
+type Query {
+  fetchUser: String!
+  newQuestion(question: Float!, situation: String!, location: String!): String!
+  chatResponse(question: [ChatResponseInput!]!): String!
+}
+
+input ChatResponseInput {
+  role: String!
+  content: String!
+}
+
+type Mutation {
+  login(email: String!, password: String!): String!
+  reissue: String!
+  createUser(email: String!, password: String!, name: String!): User!
+}
