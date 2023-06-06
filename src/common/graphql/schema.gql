@@ -8,20 +8,20 @@ type User {
   name: String!
 }
 
+input ChatResponseInput {
+  role: String!
+  content: String!
+}
+
 type Query {
   fetchUser: String!
   newQuestion(question: Float!, situation: String!, location: String!): String!
   chatResponseAuth(question: [ChatResponseInput!]!): String!
 }
 
-input ChatResponseInput {
-  role: String!
-  content: String!
-}
-
 type Mutation {
   login(email: String!): String!
   reissue: String!
   createUser(email: String!, name: String!): User!
-  chatResponse: String!
+  chatResponse(question: [ChatResponseInput!]!): String!
 }

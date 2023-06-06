@@ -4,7 +4,6 @@ import { Field, InputType } from '@nestjs/graphql';
 export class ChatResponseInput {
   @Field(() => String)
   role: 'system' | 'user' | 'assistant';
-
   @Field(() => String)
   content: string;
 }
