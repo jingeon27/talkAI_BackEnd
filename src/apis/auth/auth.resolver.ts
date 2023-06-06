@@ -8,14 +8,6 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  // @Mutation(() => JWTReceiveModel)
-  // login(
-  //   @Args('email') email: string,
-  //   @Args('password') password: string,
-
-  // ): Promise<{ accessToken: string; refreshToken: string }> {
-  //   return this.authService.login({ email, password });
-  // }
   @Mutation(() => String)
   login(
     @Args('email') email: string, //

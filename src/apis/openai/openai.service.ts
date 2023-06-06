@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { OpenAi } from './entities/openai.entity';
 import { IContext } from 'src/common/interfaces/context';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChatResponseInput } from './dto/chat-response.input';
+import { ChatResponseInput } from './input/chat-response.input';
 
 @Injectable()
 export class OpenAiService {
@@ -54,20 +54,6 @@ export class OpenAiService {
   }: {
     question: ChatResponseInput[];
   }): Promise<string> {
-    // const completion = await this.openai.createCompletion({
-    //   model: 'gpt-3.5-turbo',
-    //   prompt: `[
-    //     { role: 'system', content: 'You are a helpful assistant.' },
-    //     { role: 'user', content: 'Who won the world series in 2020?' },
-    //     {
-    //       role: 'assistant',
-    //       content: 'The Los Angeles Dodgers won the World Series in 2020.',
-    //     },
-    //     { role: 'user', content: 'Where was it played?' },
-    //   ]`,
-    //   max_tokens: 300,
-    //   temperature: 1,
-    // });
     const completion = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
