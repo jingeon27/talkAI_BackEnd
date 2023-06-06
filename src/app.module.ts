@@ -28,17 +28,6 @@ import { OpenAiModule } from './apis/openai/openai.module';
       synchronize: true,
       logging: true,
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root@localhost',
-    //   password: '707760',
-    //   database: 'myproject',
-    //   entities: [`${__dirname}/apis/**/*.entity.*`],
-    //   synchronize: true,
-    //   logging: true,
-    // }),
   ],
 })
 export class AppModule {}

@@ -11,7 +11,7 @@ type User {
 type Query {
   fetchUser: String!
   newQuestion(question: Float!, situation: String!, location: String!): String!
-  chatResponse(question: [ChatResponseInput!]!): String!
+  chatResponseAuth(question: [ChatResponseInput!]!): String!
 }
 
 input ChatResponseInput {
@@ -20,7 +20,8 @@ input ChatResponseInput {
 }
 
 type Mutation {
-  login(email: String!, password: String!): String!
+  login(email: String!): String!
   reissue: String!
-  createUser(email: String!, password: String!, name: String!): User!
+  createUser(email: String!, name: String!): User!
+  chatResponse: String!
 }

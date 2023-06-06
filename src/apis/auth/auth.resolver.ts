@@ -3,16 +3,25 @@ import { AuthService } from './auth.service';
 import { IContext } from 'src/common/interfaces/context';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
+
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
+
+  // @Mutation(() => JWTReceiveModel)
+  // login(
+  //   @Args('email') email: string,
+  //   @Args('password') password: string,
+
+  // ): Promise<{ accessToken: string; refreshToken: string }> {
+  //   return this.authService.login({ email, password });
+  // }
   @Mutation(() => String)
   login(
-    @Args('email') email: string,
-    @Args('password') password: string,
+    @Args('email') email: string, //
     @Context() context: IContext,
   ): Promise<string> {
-    return this.authService.login({ email, password, context });
+    return this.authService.login({ email, context });
   }
 
   @UseGuards(GqlAuthGuard('refresh'))
