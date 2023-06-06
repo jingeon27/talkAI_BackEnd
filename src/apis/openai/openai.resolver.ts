@@ -30,10 +30,17 @@ export class OpenAiResolver {
   }
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => String)
-  async chatResponse(
+  async chatResponseAuth(
     @Args({ name: 'question', type: () => [ChatResponseInput] })
     question: ChatResponseInput[],
   ): Promise<string> {
     return this.openAiService.chatResponse({ question });
+  }
+
+  @Mutation(() => String)
+  async chatResponse(): // @Args({ name: 'question', type: () => [ChatResponseInput] })
+  // question: ChatResponseInput[],
+  Promise<string> {
+    return '안녕하세요';
   }
 }
