@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { InputType, OmitType } from '@nestjs/graphql';
+import { ChatConversation } from '../entities/question.entity';
 
 @InputType()
-export class ChatResponseInput {
-  @Field(() => String)
-  role: 'system' | 'user' | 'assistant';
-  @Field(() => String)
-  content: string;
-}
+export class ChatResponseInput extends OmitType(
+  ChatConversation,
+  ['openAi', 'id'],
+  InputType,
+) {}

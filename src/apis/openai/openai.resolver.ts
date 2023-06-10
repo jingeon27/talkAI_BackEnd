@@ -3,7 +3,6 @@ import { OpenAiService } from './openai.service';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { OpenAi } from './entities/openai.entity';
-import { IContext } from 'src/common/interfaces/context';
 import { ChatResponseInput } from './input/chat-response.input';
 
 @Resolver()
@@ -16,15 +15,24 @@ export class OpenAiResolver {
     @Args('situation') situation: string,
     @Args('location') location: string,
   ): Promise<string> {
-    return this.openAiService.newQuestion({ question, situation, location });
+    return this.openAiService.reflection({ question, situation, location });
   }
+
   @UseGuards(GqlAuthGuard('access'))
-  @Query(() => String)
+  @Mutation(() => OpenAi)
   async chatResponseAuth(
     @Args({ name: 'question', type: () => [ChatResponseInput] })
     question: ChatResponseInput[],
-  ): Promise<string> {
-    return this.openAiService.chatResponse({ question });
+    @Args('name') name: string,
+    @Context() context,
+  ) {
+    return this.openAiService.createChat({ question, name, context });
+  }
+
+  @UseGuards(GqlAuthGuard('access'))
+  @Query(() => [OpenAi])
+  async chatList(@Context() context) {
+    return this.openAiService.getChatList({ context });
   }
 
   @Mutation(() => String)

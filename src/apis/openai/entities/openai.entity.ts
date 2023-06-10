@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ChatResponseInput } from '../input/chat-response.input';
-
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/apis/users/entities/user.entity';
 @Entity()
 @ObjectType()
 export class OpenAi {
@@ -13,7 +12,15 @@ export class OpenAi {
   @Field(() => String)
   title: string;
 
-  @Column('simple-array')
-  @Field(() => [ChatResponseInput])
-  question: ChatResponseInput[];
+  @Column()
+  @Field(() => String)
+  date: string;
+
+  @Column()
+  @Field(() => String)
+  name: string;
+
+  @ManyToOne(() => User)
+  @Field(() => User)
+  user: User;
 }
