@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import {
+  IUserServiceGetUserInfo,
   IUsersServiceCreate,
   IUsersServiceFindOneByEmail,
 } from './interfaces/users-service.interface';
-import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -16,12 +17,19 @@ export class UsersService {
   findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {
     return this.userRepository.findOne({ where: { email } });
   }
+
   async create({ email, name }: IUsersServiceCreate): Promise<User> {
     const user = await this.findOneByEmail({ email });
     if (user) throw new ConflictException('이미 등록된 이메일 입니다.');
     return this.userRepository.save({
       name,
       email,
+    });
+  }
+
+  async getUserInfo({ context }: IUserServiceGetUserInfo): Promise<User> {
+    return await this.userRepository.findOne({
+      where: { id: context.req.user.id },
     });
   }
 }

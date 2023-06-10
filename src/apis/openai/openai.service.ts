@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import { Repository } from 'typeorm';
-import { OpenAi } from './entities/openai.entity';
-import { IContext } from 'src/common/interfaces/context';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChatResponseInput } from './input/chat-response.input';
+import {
+  IChatResponse,
+  IGetChatList,
+  IOpenAiServiceCreateChat,
+  IOpenAiServiceReflection,
+} from './interface/openai.interface';
+import { ChatConversation } from './entities/question.entity';
+import { OpenAi } from 'src/apis/openai/entities/openai.entity';
 
 @Injectable()
 export class OpenAiService {
@@ -14,6 +19,9 @@ export class OpenAiService {
   constructor(
     @InjectRepository(OpenAi)
     private readonly openaiRepository: Repository<OpenAi>,
+
+    @InjectRepository(ChatConversation)
+    private readonly chatConversation: Repository<ChatConversation>,
   ) {
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
@@ -30,15 +38,11 @@ export class OpenAiService {
 
     return completion?.data.choices?.[0]?.text;
   }
-  async newQuestion({
+  async reflection({
     location,
     situation,
     question,
-  }: {
-    location: string;
-    situation: string;
-    question: number;
-  }): Promise<string> {
+  }: IOpenAiServiceReflection): Promise<string> {
     const max_tokens = question + 1000;
     const completion = await this.openai.createCompletion({
       model: 'text-davinci-003',
@@ -46,21 +50,54 @@ export class OpenAiService {
       max_tokens,
       temperature: 1,
     });
-    console.log(completion?.data.choices?.[0]?.text);
     return completion?.data.choices?.[0]?.text;
   }
-  async chatResponse({
-    question,
-  }: {
-    question: ChatResponseInput[];
-  }): Promise<string> {
+  async chatResponse({ question }: IChatResponse): Promise<string> {
     const completion = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: '너는 도움을 주는 비서야' },
-        ...question,
-      ],
+      messages: question,
     });
     return completion?.data.choices[0].message.content;
+  }
+  async getChatList({ context }: IGetChatList): Promise<OpenAi[]> {
+    return await this.openaiRepository.find({
+      where: { id: context.req.user.id },
+    });
+  }
+  async createChat({
+    question,
+    context,
+    name,
+  }: IOpenAiServiceCreateChat): Promise<
+    Promise<
+      {
+        openAi: {
+          title: string;
+          user: Express.User & {
+            id: string;
+          };
+          date: string;
+          name: string;
+        } & OpenAi;
+        role: 'system' | 'user' | 'assistant';
+        content: string;
+      } & ChatConversation
+    >[]
+  > {
+    const title = await this.openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `${question[0].content}를 요약해줘`,
+      max_tokens: 30,
+    });
+    return await this.openaiRepository
+      .save({
+        title: title.data.choices[0].text,
+        user: context.req.user,
+        date: new Date().toISOString().substring(0, 10),
+        name,
+      })
+      .then((res) =>
+        question.map((e) => this.chatConversation.save({ ...e, openAi: res })),
+      );
   }
 }

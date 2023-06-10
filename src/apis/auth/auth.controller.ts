@@ -1,9 +1,10 @@
-import { Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { DynamicAuthGuard } from './guards/dynamic-auth.guard';
 import { IOAuthUser } from './interfaces/auth-service.interface';
 import { Request, Response } from 'express';
 
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
