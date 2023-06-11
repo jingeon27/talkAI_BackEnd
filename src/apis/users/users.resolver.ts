@@ -10,7 +10,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(GqlAuthGuard('access'))
-  @Query(() => String)
+  @Query(() => User)
   getUserInfo(@Context() context: IContext): Promise<User> {
     return this.usersService.getUserInfo({ context });
   }

@@ -9,34 +9,44 @@ import { ChatResponseInput } from './input/chat-response.input';
 export class OpenAiResolver {
   constructor(private readonly openAiService: OpenAiService) {}
 
-  @Query(() => String)
-  async newQuestion(
-    @Args('question') question: number,
-    @Args('situation') situation: string,
-    @Args('location') location: string,
-  ): Promise<string> {
-    return this.openAiService.reflection({ question, situation, location });
-  }
+  // @Query(() => String)
+  // async newQuestion(
+  //   @Args('question') question: number,
+  //   @Args('situation') situation: string,
+  //   @Args('location') location: string,
+  // ): Promise<string> {
+  //   return this.openAiService.reflection({ question, situation, location });
+  // }
 
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => OpenAi)
-  async chatResponseAuth(
+  chatResponseAuth(
     @Args({ name: 'question', type: () => [ChatResponseInput] })
     question: ChatResponseInput[],
     @Args('name') name: string,
     @Context() context,
   ) {
-    return this.openAiService.createChat({ question, name, context });
+    return this.openAiService.create({ question, name, context });
   }
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => [OpenAi])
-  async chatList(@Context() context) {
+  chatList(@Context() context) {
     return this.openAiService.getChatList({ context });
   }
 
+  @UseGuards(GqlAuthGuard('access'))
+  @Mutation(() => OpenAi)
+  updateChat(
+    @Args('id') id: string,
+    @Args({ name: 'question', type: () => [ChatResponseInput] })
+    question: ChatResponseInput[],
+  ) {
+    return this.openAiService.update({ id, question });
+  }
+
   @Mutation(() => String)
-  async chatResponse(
+  chatResponse(
     @Args({ name: 'question', type: () => [ChatResponseInput] })
     question: ChatResponseInput[],
   ): Promise<string> {

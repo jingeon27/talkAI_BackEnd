@@ -9,22 +9,22 @@ type User {
 }
 
 type OpenAi {
-  id: String!
+  id: ID!
   title: String!
-  date: String!
+  date: Int!
   name: String!
   user: User!
 }
 
 type Query {
-  getUserInfo: String!
-  newQuestion(question: Float!, situation: String!, location: String!): String!
+  getUserInfo: User!
   chatList: [OpenAi!]!
 }
 
 type Mutation {
   reissue: String!
   chatResponseAuth(question: [ChatResponseInput!]!, name: String!): OpenAi!
+  updateChat(id: String!, question: [ChatResponseInput!]!): OpenAi!
   chatResponse(question: [ChatResponseInput!]!): String!
 }
 

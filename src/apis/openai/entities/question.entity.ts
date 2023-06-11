@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
@@ -12,7 +12,7 @@ import { OpenAi } from 'src/apis/openai/entities/openai.entity';
 @ObjectType()
 export class ChatConversation {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => String)
+  @Field(() => ID)
   id: string;
 
   @ManyToOne(() => OpenAi)
@@ -24,7 +24,7 @@ export class ChatConversation {
   @Field(() => String)
   role: 'system' | 'user' | 'assistant';
 
-  @Column()
+  @Column('longtext')
   @Field(() => String)
   content: string;
 }

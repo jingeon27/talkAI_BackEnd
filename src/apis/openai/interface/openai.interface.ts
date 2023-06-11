@@ -16,3 +16,6 @@ export interface IOpenAiServiceCreateChat extends IChatResponse {
 export interface IGetChatList {
   context: IContext;
 }
+export interface IOpenAiServiceUpdateChat extends IChatResponse {
+  id: string;
+}
