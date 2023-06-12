@@ -1,5 +1,11 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from 'src/apis/users/entities/user.entity';
 @Entity()
 @ObjectType()
@@ -9,12 +15,12 @@ export class OpenAi {
   id: string;
 
   @Column()
-  @Field(() => String)
-  title: string;
-
-  @Column()
   @Field(() => Int)
   date: number;
+
+  @Column()
+  @Field(() => String)
+  title: string;
 
   @Column()
   @Field(() => String)
@@ -23,4 +29,8 @@ export class OpenAi {
   @ManyToOne(() => User)
   @Field(() => User)
   user: User;
+
+  @Column()
+  @Field(() => String)
+  role: string;
 }
