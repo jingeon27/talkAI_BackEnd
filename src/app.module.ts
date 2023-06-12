@@ -15,9 +15,6 @@ import { OpenAiModule } from './apis/openai/openai.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',
-      buildSchemaOptions: {
-        dateScalarMode: 'timestamp',
-      },
       context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRoot({
@@ -28,7 +25,7 @@ import { OpenAiModule } from './apis/openai/openai.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
       entities: [`${__dirname}/apis/**/*.entity.*`],
-      synchronize: true,
+      synchronize: false,
       logging: true,
     }),
   ],

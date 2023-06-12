@@ -4,17 +4,16 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   IChatResponse,
+  IGetChatConversation,
   IGetChatList,
   IOpenAiServiceCreateChat,
-  IOpenAiServiceReflection,
+  IOpenAiServiceUpdateChat,
 } from './interface/openai.interface';
 import { ChatConversation } from './entities/question.entity';
 import { OpenAi } from 'src/apis/openai/entities/openai.entity';
 
 @Injectable()
 export class OpenAiService {
-  private CONTEXT_INSTRUCTION = 'Based on this context:';
-  private INSTRUCTION = ``;
   private openai: OpenAIApi;
   constructor(
     @InjectRepository(OpenAi)
@@ -28,76 +27,62 @@ export class OpenAiService {
     });
     this.openai = new OpenAIApi(configuration);
   }
-  async createMenuList(prompt: string, context: string) {
-    const completion = await this.openai.createCompletion({
-      model: 'gpt-3.5-turbo',
-      prompt: `${this.CONTEXT_INSTRUCTION}\n\n\nContext: "${context}" \n\n\n${this.INSTRUCTION} \n\n\n ${prompt}`,
-      max_tokens: 300,
-      temperature: 1,
-    });
-
-    return completion?.data.choices?.[0]?.text;
-  }
-  async reflection({
-    location,
-    situation,
-    question,
-  }: IOpenAiServiceReflection): Promise<string> {
-    const max_tokens = question + 1000;
-    const completion = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `${location}에서 ${situation}이란 상황으로 ${question}자보다 많지만 인접하게 반성문을 작성해줘`,
-      max_tokens,
-      temperature: 1,
-    });
-    return completion?.data.choices?.[0]?.text;
-  }
-  async chatResponse({ question }: IChatResponse): Promise<string> {
+  async chatResponse({ chat }: IChatResponse): Promise<string> {
     const completion = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: question,
+      messages: chat,
     });
     return completion?.data.choices[0].message.content;
   }
+  async getOpenAiEntity({ id }: IGetChatConversation) {
+    return await this.openaiRepository.findOne({ where: { id } });
+  }
+
   async getChatList({ context }: IGetChatList): Promise<OpenAi[]> {
     return await this.openaiRepository.find({
-      where: { id: context.req.user.id },
+      where: { user: context.req.user },
+      order: { id: 'DESC' },
     });
   }
-  async createChat({
-    question,
-    context,
-    name,
-  }: IOpenAiServiceCreateChat): Promise<
-    Promise<
-      {
-        openAi: {
-          title: string;
-          user: Express.User & {
-            id: string;
-          };
-          date: string;
-          name: string;
-        } & OpenAi;
-        role: 'system' | 'user' | 'assistant';
-        content: string;
-      } & ChatConversation
-    >[]
-  > {
+  async getChatConversations({ id }: IGetChatConversation) {
+    return await this.chatConversation.find({
+      where: {
+        openAi: { id },
+      },
+    });
+  }
+
+  async update({ chat, id }: IOpenAiServiceUpdateChat) {
+    const content = await this.chatResponse({ chat });
+    await this.openaiRepository.save({
+      id,
+      date: parseInt(
+        new Date().toISOString().substring(0, 10).replace(/-/g, ''),
+      ),
+    });
+    await this.chatConversation.save({ openAi: { id }, ...chat.at(-1) });
+    return this.chatConversation.save({
+      openAi: { id },
+      content,
+      role: 'assistant',
+    });
+  }
+  async create({ chat, context, name, role }: IOpenAiServiceCreateChat) {
     const title = await this.openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `${question[0].content}를 요약해줘`,
+      prompt: `${chat[1].content}를 요약해줘`,
       max_tokens: 30,
     });
-    return await this.openaiRepository
-      .save({
-        title: title.data.choices[0].text,
-        user: context.req.user,
-        date: new Date().toISOString().substring(0, 10),
-        name,
-      })
-      .then((res) =>
-        question.map((e) => this.chatConversation.save({ ...e, openAi: res })),
-      );
+    const response = await this.openaiRepository.save({
+      title: title.data.choices[0].text,
+      user: context.req.user,
+      date: parseInt(
+        new Date().toISOString().substring(0, 10).replace(/-/g, ''),
+      ),
+      name,
+      role,
+    });
+    this.chatConversation.insert({ ...chat[0], openAi: response });
+    return response;
   }
 }
