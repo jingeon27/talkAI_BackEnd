@@ -1,6 +1,7 @@
 import { IContext } from 'src/common/interfaces/context';
 
 export interface IUsersServiceCreate {
+  id?: string;
   email: string;
   name: string;
 }
