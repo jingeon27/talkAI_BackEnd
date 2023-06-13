@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import {
   IUserServiceGetUserInfo,
   IUsersServiceCreate,
-  IUsersServiceFindOneByEmail,
 } from './interfaces/users-service.interface';
 
 @Injectable()
@@ -14,13 +13,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  findOneByEmail({ email }: IUsersServiceFindOneByEmail): Promise<User> {
-    return this.userRepository.findOne({ where: { email } });
-  }
-
   async create({ email, name }: IUsersServiceCreate): Promise<User> {
-    const user = await this.findOneByEmail({ email });
-    if (user) throw new ConflictException('이미 등록된 이메일 입니다.');
     return this.userRepository.save({
       name,
       email,
