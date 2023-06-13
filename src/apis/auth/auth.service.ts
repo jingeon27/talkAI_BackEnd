@@ -20,11 +20,7 @@ export class AuthService {
   }
 
   async loginOAuth({ req, res }: IAuthServiceLoginOAuth) {
-    let user = await this.usersService.findOneByEmail({
-      email: req.user.email,
-    });
-
-    if (!user) user = await this.usersService.create({ ...req.user });
+    const user = await this.usersService.create({ ...req.user });
 
     this.setRefreshToken({ user, res });
     res.redirect(process.env.REDIRECT_URL);
