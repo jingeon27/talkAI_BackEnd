@@ -10,15 +10,6 @@ import { ChatConversation } from './entities/question.entity';
 export class OpenAiResolver {
   constructor(private readonly openAiService: OpenAiService) {}
 
-  // @Query(() => String)
-  // async newQuestion(
-  //   @Args('question') question: number,
-  //   @Args('situation') situation: string,
-  //   @Args('location') location: string,
-  // ): Promise<string> {
-  //   return this.openAiService.reflection({ question, situation, location });
-  // }
-
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => OpenAi)
   createChat(
