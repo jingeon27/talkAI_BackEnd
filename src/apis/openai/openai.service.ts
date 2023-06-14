@@ -41,7 +41,7 @@ export class OpenAiService {
   async getChatList({ context }: IGetChatList): Promise<OpenAi[]> {
     return await this.openaiRepository.find({
       where: { user: context.req.user },
-      order: { id: 'DESC' },
+      order: { date: 'DESC' },
     });
   }
   async getChatConversations({ id }: IGetChatConversation) {
@@ -49,6 +49,7 @@ export class OpenAiService {
       where: {
         openAi: { id },
       },
+      order: { id: 'DESC' },
     });
   }
 
