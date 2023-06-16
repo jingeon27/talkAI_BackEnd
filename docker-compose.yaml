@@ -13,7 +13,7 @@ services:
       - ./.env.docker
 
   my-database:
-    platform: linux/86_64
+    platform: linux/86_64/Users/gimjingeon/Downloads/jingoeon27.pem
     image: mysql:latest
     environment:
       MYSQL_DATABASE: 'mydb'

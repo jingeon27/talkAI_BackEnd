@@ -25,7 +25,7 @@ import { OpenAiModule } from './apis/openai/openai.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
       entities: [`${__dirname}/apis/**/*.entity.*`],
-      synchronize: true,
+      synchronize: false,
       logging: true,
     }),
   ],
