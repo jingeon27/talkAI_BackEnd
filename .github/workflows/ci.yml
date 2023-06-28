@@ -7,7 +7,7 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -24,3 +24,25 @@ jobs:
         run: yarn install
       - run: yarn build
       - run: yarn test
+
+  merge-check:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Merge Check
+        run: |
+          if [ "${{ needs.build-and-test.outcome }}" == "failure" ]; then
+            echo "CI Build and Test failed. Aborting merge."
+            exit 1
+          else
+            echo "CI Build and Test passed. Ready for merge."
+          fi
