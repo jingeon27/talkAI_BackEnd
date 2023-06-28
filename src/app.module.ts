@@ -6,6 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { OpenAiModule } from './apis/openai/openai.module';
+import { AiModule } from './ai/ai.module';
+import { ChatModule } from './chat/chat.module';
+import { AiResolver } from './ai/ai.resolver';
 @Module({
   imports: [
     AuthModule,
@@ -31,6 +34,9 @@ import { OpenAiModule } from './apis/openai/openai.module';
       synchronize: false,
       logging: true,
     }),
+    AiModule,
+    ChatModule,
   ],
+  providers: [AiResolver],
 })
 export class AppModule {}

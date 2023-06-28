@@ -43,18 +43,4 @@ export class OpenAiResolver {
   getOpenAi(@Args({ name: 'id', type: () => ID }) id: number) {
     return this.openAiService.getOpenAiEntity({ id });
   }
-
-  @UseGuards(GqlAuthGuard('access'))
-  @Query(() => [ChatConversation])
-  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: number) {
-    return this.openAiService.getChatConversations({ id });
-  }
-
-  @Mutation(() => String)
-  chatResponse(
-    @Args({ name: 'chat', type: () => [ChatResponseInput] })
-    chat: ChatResponseInput[],
-  ): Promise<string> {
-    return this.openAiService.chatResponse({ chat });
-  }
 }

@@ -2,18 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { ChatConversation } from './entities/chatConversation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { OpenAIApi, Configuration } from 'openai';
+import { IGetChatConversation } from './interfaces/chat.interface';
 
 @Injectable()
 export class ChatService {
-  private openai: OpenAIApi;
   constructor(
     @InjectRepository(ChatConversation)
     private readonly chatConversation: Repository<ChatConversation>,
-  ) {
-    const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+  ) {}
+
+  async find({ id }: IGetChatConversation) {
+    return await this.chatConversation.find({
+      where: {
+        openAi: { id },
+      },
+      order: { id: 'DESC' },
     });
-    this.openai = new OpenAIApi(configuration);
+  }
+  async insert(data: Omit<ChatConversation, 'id'>) {
+    await this.chatConversation.insert(data);
+  }
+  async save({
+    id,
+    ...args
+  }: Omit<ChatConversation, 'id' | 'openAi'> & { id: number }) {
+    return this.chatConversation.save({ openAi: { id }, args });
   }
 }
