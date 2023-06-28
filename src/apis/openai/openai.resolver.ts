@@ -31,21 +31,22 @@ export class OpenAiResolver {
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => ChatConversation)
   updateChat(
-    @Args({ name: 'id', type: () => ID }) id: string,
+    @Args({ name: 'id', type: () => ID }) id: number,
     @Args({ name: 'chat', type: () => [ChatResponseInput] })
     chat: ChatResponseInput[],
   ) {
     return this.openAiService.update({ id, chat });
   }
+
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => OpenAi)
-  getOpenAi(@Args({ name: 'id', type: () => ID }) id: string) {
+  getOpenAi(@Args({ name: 'id', type: () => ID }) id: number) {
     return this.openAiService.getOpenAiEntity({ id });
   }
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => [ChatConversation])
-  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: string) {
+  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: number) {
     return this.openAiService.getChatConversations({ id });
   }
 

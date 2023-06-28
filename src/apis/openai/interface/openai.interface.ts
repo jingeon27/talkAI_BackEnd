@@ -18,8 +18,11 @@ export interface IGetChatList {
   context: IContext;
 }
 export interface IOpenAiServiceUpdateChat extends IChatResponse {
-  id: string;
+  id: number;
 }
 export interface IGetChatConversation {
-  id: string;
+  id: number;
+}
+export interface IReStartChat {
+  id: number;
 }

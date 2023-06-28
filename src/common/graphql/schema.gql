@@ -10,11 +10,12 @@ type User {
 
 type OpenAi {
   id: ID!
-  date: Int!
   title: String!
   name: String!
+  date: Date!
   user: User!
   role: String!
+  image: String!
 }
 
 type ChatConversation {
@@ -23,6 +24,9 @@ type ChatConversation {
   role: String!
   content: String!
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type Query {
   getUserInfo: User!

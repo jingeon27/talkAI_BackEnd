@@ -52,14 +52,11 @@ export class OpenAiService {
       order: { id: 'DESC' },
     });
   }
-
   async update({ chat, id }: IOpenAiServiceUpdateChat) {
     const content = await this.chatResponse({ chat });
     await this.openaiRepository.save({
       id,
-      date: parseInt(
-        new Date().toISOString().substring(0, 10).replace(/-/g, ''),
-      ),
+      date: new Date(),
     });
     await this.chatConversation.save({ openAi: { id }, ...chat.at(-1) });
     return this.chatConversation.save({
@@ -77,9 +74,7 @@ export class OpenAiService {
     const response = await this.openaiRepository.save({
       title: title.data.choices[0].text,
       user: context.req.user,
-      date: parseInt(
-        new Date().toISOString().substring(0, 10).replace(/-/g, ''),
-      ),
+      date: new Date(),
       name,
       role,
     });
