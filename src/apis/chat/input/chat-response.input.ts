@@ -1,5 +1,5 @@
 import { InputType, OmitType } from '@nestjs/graphql';
-import { ChatConversation } from '../entities/question.entity';
+import { ChatConversation } from '../entities/chatConversation.entity';
 
 @InputType()
 export class ChatResponseInput extends OmitType(

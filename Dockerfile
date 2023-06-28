@@ -1,10 +1,12 @@
-FROM node:16
+# STEP 1
+FROM node:16 AS builder
+WORKDIR /app
+COPY . .
+RUN yarn
+RUN yarn build
 
-COPY ./package.json /myfolder/
-COPY ./yarn.lock /myfolder/
-WORKDIR /app/
-RUN yarn install
-
-COPY . /myfolder/
-
-CMD yarn start:dev
+# STEP 2
+FROM node:16-alpine
+WORKDIR /app
+COPY --from=builder /app ./
+CMD ["yarn", "start:prod"]

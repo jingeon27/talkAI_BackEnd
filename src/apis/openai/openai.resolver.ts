@@ -3,8 +3,8 @@ import { OpenAiService } from './openai.service';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { OpenAi } from './entities/openai.entity';
-import { ChatResponseInput } from './input/chat-response.input';
-import { ChatConversation } from './entities/question.entity';
+import { ChatResponseInput } from '../chat/input/chat-response.input';
+import { ChatConversation } from '../chat/entities/chatConversation.entity';
 
 @Resolver()
 export class OpenAiResolver {
@@ -31,29 +31,16 @@ export class OpenAiResolver {
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => ChatConversation)
   updateChat(
-    @Args({ name: 'id', type: () => ID }) id: string,
+    @Args({ name: 'id', type: () => ID }) id: number,
     @Args({ name: 'chat', type: () => [ChatResponseInput] })
     chat: ChatResponseInput[],
   ) {
     return this.openAiService.update({ id, chat });
   }
+
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => OpenAi)
-  getOpenAi(@Args({ name: 'id', type: () => ID }) id: string) {
+  getOpenAi(@Args({ name: 'id', type: () => ID }) id: number) {
     return this.openAiService.getOpenAiEntity({ id });
-  }
-
-  @UseGuards(GqlAuthGuard('access'))
-  @Query(() => [ChatConversation])
-  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: string) {
-    return this.openAiService.getChatConversations({ id });
-  }
-
-  @Mutation(() => String)
-  chatResponse(
-    @Args({ name: 'chat', type: () => [ChatResponseInput] })
-    chat: ChatResponseInput[],
-  ): Promise<string> {
-    return this.openAiService.chatResponse({ chat });
   }
 }

@@ -1,9 +1,5 @@
 import { IContext } from 'src/common/interfaces/context';
-import { ChatResponseInput } from '../input/chat-response.input';
-
-export interface IChatResponse {
-  chat: ChatResponseInput[];
-}
+import { IChatResponse } from 'src/apis/ai/interfaces/ai.interface';
 export interface IOpenAiServiceReflection {
   location: string;
   situation: string;
@@ -18,8 +14,8 @@ export interface IGetChatList {
   context: IContext;
 }
 export interface IOpenAiServiceUpdateChat extends IChatResponse {
-  id: string;
+  id: number;
 }
-export interface IGetChatConversation {
-  id: string;
+export interface IIdArgs {
+  id: number;
 }
