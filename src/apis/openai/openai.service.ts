@@ -9,7 +9,7 @@ import {
   IOpenAiServiceCreateChat,
   IOpenAiServiceUpdateChat,
 } from './interface/openai.interface';
-import { ChatConversation } from './entities/question.entity';
+import { ChatConversation } from '../chat/entities/chatConversation.entity';
 import { OpenAi } from 'src/apis/openai/entities/openai.entity';
 
 @Injectable()

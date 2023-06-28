@@ -3,7 +3,7 @@ import { OpenAiResolver } from './openai.resolver';
 import { OpenAiService } from './openai.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OpenAi } from './entities/openai.entity';
-import { ChatConversation } from './entities/question.entity';
+import { ChatConversation } from '../chat/entities/chatConversation.entity';
 import { DateScalar } from 'src/common/scalars/date.scalar';
 @Module({
   imports: [TypeOrmModule.forFeature([OpenAi, ChatConversation])],

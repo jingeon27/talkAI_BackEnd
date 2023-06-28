@@ -3,8 +3,8 @@ import { OpenAiService } from './openai.service';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { OpenAi } from './entities/openai.entity';
-import { ChatResponseInput } from './input/chat-response.input';
-import { ChatConversation } from './entities/question.entity';
+import { ChatResponseInput } from '../chat/input/chat-response.input';
+import { ChatConversation } from '../chat/entities/chatConversation.entity';
 
 @Resolver()
 export class OpenAiResolver {

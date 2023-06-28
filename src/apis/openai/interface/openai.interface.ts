@@ -1,5 +1,5 @@
 import { IContext } from 'src/common/interfaces/context';
-import { ChatResponseInput } from '../input/chat-response.input';
+import { ChatResponseInput } from '../../chat/input/chat-response.input';
 
 export interface IChatResponse {
   chat: ChatResponseInput[];
