@@ -6,14 +6,15 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './apis/users/users.module';
 import { AuthModule } from './apis/auth/auth.module';
 import { OpenAiModule } from './apis/openai/openai.module';
-import { AiModule } from './ai/ai.module';
-import { ChatModule } from './chat/chat.module';
-import { AiResolver } from './ai/ai.resolver';
+import { AiModule } from './apis/ai/ai.module';
+import { ChatModule } from './apis/chat/chat.module';
 @Module({
   imports: [
     AuthModule,
     UsersModule,
     OpenAiModule,
+    ChatModule,
+    AiModule,
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -34,9 +35,6 @@ import { AiResolver } from './ai/ai.resolver';
       synchronize: false,
       logging: true,
     }),
-    AiModule,
-    ChatModule,
   ],
-  providers: [AiResolver],
 })
 export class AppModule {}
