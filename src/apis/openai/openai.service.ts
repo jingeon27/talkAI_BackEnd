@@ -46,6 +46,7 @@ export class OpenAiService {
       role: 'assistant',
     });
   }
+
   async create({ chat, context, ...args }: IOpenAiServiceCreateChat) {
     const title = await this.aiService.summary({ content: chat[0].content });
     console.log(title, context.req.user);
@@ -55,8 +56,6 @@ export class OpenAiService {
       title,
       ...args,
     });
-    console.log(response);
-    console.log(chat);
     this.chatService.insert({ ...chat[0], openAi: response });
     return response;
   }

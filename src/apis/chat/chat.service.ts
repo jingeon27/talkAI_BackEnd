@@ -19,10 +19,12 @@ export class ChatService {
       order: { id: 'DESC' },
     });
   }
+
   async insert(data: Omit<ChatConversation, 'id'>) {
     console.log(data);
     await this.chatConversation.insert(data);
   }
+
   async save({
     id,
     ...args
