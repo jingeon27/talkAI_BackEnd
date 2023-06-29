@@ -31,6 +31,7 @@ type Query {
   getUserInfo: User!
   chatList: [OpenAi!]!
   getOpenAi(id: ID!): OpenAi!
+  getBeforeChat(id: ID!): [ChatConversation!]!
 }
 
 type Mutation {
