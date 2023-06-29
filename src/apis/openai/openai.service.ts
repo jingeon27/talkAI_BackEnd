@@ -48,12 +48,15 @@ export class OpenAiService {
   }
   async create({ chat, context, ...args }: IOpenAiServiceCreateChat) {
     const title = await this.aiService.summary({ content: chat[0].content });
+    console.log(title, context.req.user);
     const response = await this.openaiRepository.save({
       user: context.req.user,
       date: new Date(),
       title,
-      args,
+      ...args,
     });
+    console.log(response);
+    console.log(chat);
     this.chatService.insert({ ...chat[0], openAi: response });
     return response;
   }

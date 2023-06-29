@@ -15,7 +15,6 @@ type OpenAi {
   date: Date!
   user: User!
   role: String!
-  image: String!
 }
 
 type ChatConversation {

@@ -9,7 +9,7 @@ export class ChatResolver {
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => [ChatConversation])
-  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: number) {
+  getBeforeChat(@Args({ name: 'id', type: () => ID }) id: string) {
     return this.chatService.find({ id });
   }
 }

@@ -1,3 +1,3 @@
 export interface IGetChatConversation {
-  id: number;
+  id: string;
 }
