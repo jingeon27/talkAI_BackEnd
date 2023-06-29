@@ -31,7 +31,7 @@ export class OpenAiResolver {
   @UseGuards(GqlAuthGuard('access'))
   @Mutation(() => ChatConversation)
   updateChat(
-    @Args({ name: 'id', type: () => ID }) id: number,
+    @Args({ name: 'id', type: () => ID }) id: string,
     @Args({ name: 'chat', type: () => [ChatResponseInput] })
     chat: ChatResponseInput[],
   ) {
@@ -40,7 +40,7 @@ export class OpenAiResolver {
 
   @UseGuards(GqlAuthGuard('access'))
   @Query(() => OpenAi)
-  getOpenAi(@Args({ name: 'id', type: () => ID }) id: number) {
+  getOpenAi(@Args({ name: 'id', type: () => ID }) id: string) {
     return this.openAiService.getOpenAiEntity({ id });
   }
 }

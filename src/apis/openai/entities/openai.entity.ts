@@ -4,9 +4,9 @@ import { User } from 'src/apis/users/entities/user.entity';
 @Entity()
 @ObjectType()
 export class OpenAi {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
-  id: number;
+  id: string;
 
   @Column()
   @Field(() => String)
@@ -17,7 +17,7 @@ export class OpenAi {
   name: string;
 
   @Column({ type: 'timestamp' })
-  @Field()
+  @Field(() => Date)
   date: Date;
 
   @ManyToOne(() => User)
@@ -27,8 +27,4 @@ export class OpenAi {
   @Column()
   @Field(() => String)
   role: string;
-
-  @Column()
-  @Field(() => String)
-  image: string;
 }
