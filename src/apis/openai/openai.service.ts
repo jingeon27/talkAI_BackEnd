@@ -22,7 +22,7 @@ export class OpenAiService {
     private readonly chatService: ChatService,
   ) {}
 
-  async getOpenAiEntity({ id }: IIdArgs) {
+  async getOpenAiEntity({ id }: IIdArgs): Promise<OpenAi> {
     return await this.openaiRepository.findOne({ where: { id } });
   }
 

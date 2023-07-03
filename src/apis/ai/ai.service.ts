@@ -20,7 +20,7 @@ export class AiService {
     return completion?.data.choices[0].message.content;
   }
 
-  async summary({ content }: ISummary) {
+  async summary({ content }: ISummary): Promise<string> {
     const completion = await this.openai.createCompletion({
       model: 'text-davinci-003',
       prompt: `${content}를 요약해줘`,
