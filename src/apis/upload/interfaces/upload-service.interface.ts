@@ -1,5 +1,6 @@
-import { FileUpload } from 'graphql-upload';
-
 export interface IFilesServiceUpload {
-  file: FileUpload;
+  file: string;
+}
+export interface IFilesServiceUploadRespose {
+  profile: string;
 }

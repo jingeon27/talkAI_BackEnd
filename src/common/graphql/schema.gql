@@ -6,6 +6,7 @@ type User {
   id: ID!
   email: String!
   name: String!
+  profile: String!
 }
 
 type OpenAi {
@@ -15,6 +16,7 @@ type OpenAi {
   date: Date!
   user: User!
   role: String!
+  profile: String!
 }
 
 type ChatConversation {
@@ -39,6 +41,7 @@ type Mutation {
   createChat(chat: [ChatResponseInput!]!, name: String!, role: String!): OpenAi!
   updateChat(id: ID!, chat: [ChatResponseInput!]!): ChatConversation!
   chatResponse(chat: [ChatResponseInput!]!): String!
+  profileImage(prompt: String!): String!
 }
 
 input ChatResponseInput {

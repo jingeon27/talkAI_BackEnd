@@ -27,4 +27,10 @@ export class OpenAi {
   @Column()
   @Field(() => String)
   role: string;
+
+  @Column({
+    type: 'longtext',
+  })
+  @Field(() => String)
+  profile: string;
 }

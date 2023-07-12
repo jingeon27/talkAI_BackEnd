@@ -13,4 +13,9 @@ export class AiResolver {
   ): Promise<string> {
     return this.aiService.chatResponse({ chat });
   }
+
+  @Mutation(() => String)
+  profileImage(@Args('prompt') prompt: string) {
+    return this.aiService.generateProfileImage({ prompt });
+  }
 }

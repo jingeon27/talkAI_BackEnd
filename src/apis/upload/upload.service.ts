@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { IFilesServiceUpload } from './interfaces/upload-service.interface';
+import {
+  IFilesServiceUpload,
+  IFilesServiceUploadRespose,
+} from './interfaces/upload-service.interface';
 import { Storage } from '@google-cloud/storage';
+import axios from 'axios';
+
 @Injectable()
 export class UploadService {
   private readonly bucketname: string;
@@ -15,17 +20,25 @@ export class UploadService {
       keyFilename: process.env.KEY_FILE_NAME,
     }).bucket(this.bucketname);
 
-    return new Promise((resolve, reject) =>
-      file
-        .createReadStream()
-        .pipe(storage.file(file.filename).createWriteStream())
-        .on('finish', () => {
-          const publicUrl = `https://storage.googleapis.com/${this.bucketname}/${file.filename}`;
-          resolve({ publicUrl });
-        })
-        .on('error', (error) => {
-          reject(error);
-        }),
+    return new Promise<IFilesServiceUploadRespose>((resolve, reject) =>
+      axios.get(file).then((res) => {
+        const data = Buffer.from(res.data, 'base64');
+
+        return storage
+          .file('example.png')
+          .createWriteStream()
+          .on('finish', () => {
+            console.log();
+            const profile = `https://storage.googleapis.com/${
+              this.bucketname
+            }/${'example.png'}`;
+            resolve({ profile });
+          })
+          .on('error', (error) => {
+            reject(error);
+          })
+          .end(data);
+      }),
     );
   }
 }

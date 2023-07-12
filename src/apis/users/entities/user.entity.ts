@@ -15,4 +15,8 @@ export class User {
   @Column()
   @Field(() => String)
   name: string;
+
+  @Column()
+  @Field(() => String)
+  profile: string;
 }
