@@ -22,7 +22,7 @@ export class OpenAiService {
     private readonly chatService: ChatService,
   ) {}
 
-  async getOpenAiEntity({ id }: IIdArgs) {
+  async getOpenAiEntity({ id }: IIdArgs): Promise<OpenAi> {
     return await this.openaiRepository.findOne({ where: { id } });
   }
 
@@ -37,6 +37,7 @@ export class OpenAiService {
     const content = await this.aiService.chatResponse({ chat });
     await this.openaiRepository.save({
       id,
+      title: chat[chat.length - 1].content,
       date: new Date(),
     });
     await this.chatService.save({ id, ...chat.at(-1) });
@@ -48,15 +49,20 @@ export class OpenAiService {
   }
 
   async create({ chat, context, ...args }: IOpenAiServiceCreateChat) {
-    const title = await this.aiService.summary({ content: chat[0].content });
-    console.log(title, context.req.user);
-    const response = await this.openaiRepository.save({
-      user: context.req.user,
-      date: new Date(),
-      title,
-      ...args,
+    const profile = await this.aiService.generateProfileImage({
+      prompt: chat[1].content,
     });
-    this.chatService.insert({ ...chat[0], openAi: response });
-    return response;
+    return await this.openaiRepository
+      .save({
+        user: context.req.user,
+        date: new Date(),
+        title: chat[1].content,
+        profile,
+        ...args,
+      })
+      .then((openAi) => {
+        this.chatService.insert({ ...chat[0], openAi });
+        return openAi;
+      });
   }
 }

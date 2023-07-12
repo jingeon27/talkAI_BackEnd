@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
-import { IChatResponse, ISummary } from './interfaces/ai.interface';
+import {
+  IAiServiceGenerateProfileImage,
+  IChatResponse,
+  ISummary,
+} from './interfaces/ai.interface';
 
 @Injectable()
 export class AiService {
@@ -20,7 +24,16 @@ export class AiService {
     return completion?.data.choices[0].message.content;
   }
 
-  async summary({ content }: ISummary) {
+  async generateProfileImage({ prompt }: IAiServiceGenerateProfileImage) {
+    const response = await this.openai.createImage({
+      prompt,
+      n: 1,
+      size: '256x256',
+    });
+    return response.data.data[0].url;
+  }
+
+  async summary({ content }: ISummary): Promise<string> {
     const completion = await this.openai.createCompletion({
       model: 'text-davinci-003',
       prompt: `${content}를 요약해줘`,

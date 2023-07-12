@@ -6,3 +6,6 @@ export interface IChatResponse {
 export interface ISummary {
   content: string;
 }
+export interface IAiServiceGenerateProfileImage {
+  prompt: string;
+}
